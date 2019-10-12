@@ -10,6 +10,7 @@ Click [here](https://discordapp.com/api/oauth2/authorize?client_id=5911314686889
 
 Use "@Rainbow Roles help" to get help using the bot.
 
+
 ## Setup
 Tested on Linux 5.1.7-300.fc30.x86_64 (Fedora 30) with Node.js v10.15.3 and NPM v6.4.1.
 

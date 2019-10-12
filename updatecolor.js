@@ -30,10 +30,11 @@ const Debug = require('debug')
 const Package = require('./package.json')
 const Axios = require('axios')
 const { token } = require('./token.json')
-const { timeout } = require('./config.json')
+const { timeout, userAgent } = require('./config.json')
 
 const log = Debug('update-color')
 const errLog = Debug('update-color-error')
+const verboseErrLog = Debug('update-color-error-verbose')
 
 function getColorFromColorHex (colorHex) {
     const colorDecoded =
@@ -61,7 +62,7 @@ async function updateColorDirect (guildID, roleID, colorHex) {
             timeout: timeout,
             headers: {
                 Authorization: `Bot ${token}`,
-                'User-Agent': `rainbow-roles-bot/${Package.version}`,
+                'User-Agent': userAgent.replace('$', Package.version),
                 'Content-Type': 'application/json'
             },
             data: {
@@ -73,8 +74,13 @@ async function updateColorDirect (guildID, roleID, colorHex) {
         })
         log(`directly updated color successfully on ${guildID}/${roleID}`)
     } catch (err) {
-        log(`direct update for ${guildID}/${roleID} failed!`, err)
-        errLog(`direct update for ${guildID}/${roleID} failed!`, err)
+        let data = err
+        try {
+            data = err.response.data || data
+        } catch (err) {}
+        log(`direct update for ${guildID}/${roleID} failed!`, data)
+        errLog(`direct update for ${guildID}/${roleID} failed!`, data)
+        verboseErrLog(err)
         throw err
     }
     return result
@@ -99,6 +105,11 @@ function updateColor (role, colorHex) {
                     reject(err)
                 }, timeout)
             })
+        setTimeout(() => {
+            log(`update for ${guildID}/${roleID} timed out!`)
+            errLog(`update for ${guildID}/${roleID} timed out!`)
+            reject(new Error('Timed out'))
+        }, timeout)
     })
 }
 

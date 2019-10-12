@@ -28,7 +28,8 @@
 
 const Debug = require('debug')
 const Set = require('./sets.js')
-const { updateColor } = require('./updatecolor.js')
+const { updateColor, updateColorDirect } = require('./updatecolor.js')
+const { useDirect } = require('./config.json')
 
 const log = Debug('role')
 const verboseLog = Debug('role-built')
@@ -65,7 +66,8 @@ function ManagedRole (role) {
         index++
         if (index >= scheme.length) index = 0
         if (index < 0) index = 0
-        await updateColor(role, scheme[index])
+        if (!useDirect) await updateColor(role, scheme[index])
+        else await updateColorDirect(role.guild.id, role.id, scheme[index])
     }
 
     Object.defineProperties(this, {
