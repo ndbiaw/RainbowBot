@@ -37,6 +37,7 @@ const log = Debug('bot')
 const statsLog = Debug('stats')
 const inviteLog = Debug('invites')
 const updateLog = Debug('bot-update')
+const deathLog = Debug('die')
 
 const bot = new Discord.Client()
 
@@ -68,15 +69,31 @@ bot.on('guildCreate', guild => {
     })
 })
 
+function hasSendPermission (channel) {
+    return channel.type === 'text' && channel.memberPermissions(channel.guild.me).has('SEND_MESSAGES')
+}
+
 function mainChannel (guild) {
-    if (guild.systemChannelID) return guild.channels.get(guild.systemChannelID)
-    const general = guild.channels.find(channel => channel.name === 'general')
-    if (general) return general
-    return guild.channels.sort((chanA, chanB) => {
-        if (chanA.type !== `text`) return 1
-        if (!chanA.permissionsFor(guild.me).has('SEND_MESSAGES')) return -1
+    if (guild.systemChannelID) {
+        const systemChannel = guild.channels.get(guild.systemChannelID)
+        if (hasSendPermission(systemChannel)) {
+            return systemChannel
+        }
+    }
+
+    const general = guild.channels.find(channel => /^(general|main|chat)$/.test(channel.name))
+    if (general && hasSendPermission(general)) {
+        return general
+    }
+
+    const sorted = guild.channels.sort((chanA, chanB) => {
+        if (!hasSendPermission(chanA)) return -1
         return chanA.position < chanB.position ? -1 : 1
-    }).first()
+    })
+    const bestPossible = sorted.first()
+    // console.log(sorted, bestPossible)
+
+    return bestPossible
 }
 
 let mentionRegex
@@ -125,7 +142,19 @@ bot.on('ready', () => {
     statsLog(stats)
 
     if (dieOnBoot) {
-        bot.guilds.forEach(guild => itsOver(guild))
+        setTimeout(() => {
+            deathLog('die on boot has been enabled, printing death notes and leaving guilds')
+            bot.guilds.forEach(guild => {
+                deathLog(`now leaving guild (${guild.id}) ${guild.name}`)
+                itsOver(guild)
+                    .then(() => {
+                        deathLog(`left guild (${guild.id}) ${guild.name}`)
+                    })
+                    .catch(err => {
+                        deathLog(`failed to leave guild (${guild.id}) ${guild.name}`, err)
+                    })
+            })
+        }, 8000)
     }
 })
 
@@ -238,25 +267,28 @@ async function itsOver (guild) {
     await mainChannel(guild).send({
         embed: new Discord.RichEmbed()
             .setTitle('Rainbow Roles is DEAD!')
-            .setDescription('Hello everyone! Jack here. (creator of da bot)\n' +
-            '\n' +
-            'So it finally happened.\n' +
-            '\n' +
-            'Originally while designing this bot I ignored the warning from @discordapp about how I would get banned for making Rainbow Roles:\n' +
-            'https://twitter.com/discordapp/status/1055182857709256704\n' +
-            '\n' +
-            "It's been 114 days since I brought Rainbow Roles online and I've just been IP-banned from editing roles.\n" +
-            'No Discord bot or Discord account on my network can ever edit role colors again, so the bot is being shutdown.\n' +
-            '\n' +
-            'However if you would like to run your own non-banned instance feel free to use the code over at https://github.com/jackm-xyz/rainbow-roles\n' +
-            '\n' +
-            'Thanks for using my bot!\n' +
-            '\n' +
-            'Self destructing in\n' +
-            '3...\n' +
-            '2...\n' +
-            '1...')
+            .setDescription(
+                'Hello everyone! Jack here. (creator of da bot)\n' +
+                '\n' +
+                'So it finally happened.\n' +
+                '\n' +
+                'Originally while designing this bot I ignored the warning from @discordapp about how I would get banned for making Rainbow Roles:\n' +
+                'https://twitter.com/discordapp/status/1055182857709256704\n' +
+                '\n' +
+                "It's been 114 days since I brought Rainbow Roles online and I've just been IP-banned from editing roles.\n" +
+                'No Discord bot or Discord account on my network can ever edit role colors again, so the bot is being shutdown.\n' +
+                '\n' +
+                'However if you would like to run your own non-banned instance feel free to use the code over at https://github.com/jackm-xyz/rainbow-roles\n' +
+                '\n' +
+                'Thanks for using my bot!\n' +
+                '\n' +
+                'Self destructing in\n' +
+                '3...\n' +
+                '2...\n' +
+                '1...'
+            )
             .setFooter(...githubFooter)
     })
-    setTimeout(() => guild.leave(), 5000)
+    await new Promise(r=>setTimeout(r,5000))
+    await guild.leave()
 }

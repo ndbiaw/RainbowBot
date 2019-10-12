@@ -1,13 +1,13 @@
 {
   "name": "rainbow-roles",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "Make Discord server roles change color!",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "DEBUG=colors,hello,guild,bot,bot-command node index.js",
-    "start-verbose": "DEBUG=update-color-error,colors,hello,guild,bot,bot-command,stats,invites,role-built node index.js",
-    "start-build": "DEBUG=update-color-error,colors,hello,guild,bot,bot-command,stats,invites,role-built,scheme-build node index.js",
+    "start": "DEBUG=colors,hello,guild,bot,bot-command,die node index.js",
+    "start-verbose": "DEBUG=update-color-error,colors,hello,guild,bot,bot-command,stats,invites,role-built,die node index.js",
+    "start-build": "DEBUG=update-color-error,colors,hello,guild,bot,bot-command,stats,invites,role-built,scheme-build,die node index.js",
     "start-dev": "DEBUG=*,-follow-redirects node index.js",
     "format": "npx standardx --fix"
   },
