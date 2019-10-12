@@ -35,9 +35,23 @@ const { timeout } = require('./config.json')
 const log = Debug('update-color')
 const errLog = Debug('update-color-error')
 
-module.exports = async (guildID, roleID, colorHex) => {
+function getColorFromColorHex (colorHex) {
+    const colorDecoded =
+        (
+            (
+                colorHex.match(/#[0-9ABCDEF]{6}/i) ||
+                []
+            )[0] ||
+            '#FFFFFF'
+        ).substring(1)
+    return parseInt(colorDecoded, 16)
+}
+
+Object.freeze(getColorFromColorHex)
+
+async function updateColorDirect (guildID, roleID, colorHex) {
     log(
-        `Updating color for role ${guildID}/${roleID} to ${colorHex.toUpperCase()}`
+        `directly updating color for role ${guildID}/${roleID} to ${colorHex.toUpperCase()}`
     )
     let result
     try {
@@ -51,16 +65,50 @@ module.exports = async (guildID, roleID, colorHex) => {
                 'Content-Type': 'application/json'
             },
             data: {
-                color: eval('0x' + ((colorHex.match(/#[0-9ABCDEF]{6}/i) || [])[0] || '#FFFFFF').substring(1)) // eval is not good, use a better system in the future
+                // i would have kept this as a meme but god damn eval in production
+                // WITH USER INPUT no less
+                // color: eval('0x' + ((colorHex.match(/#[0-9ABCDEF]{6}/i) || [])[0] || '#FFFFFF').substring(1)) // eval is not good, use a better system in the future
+                color: getColorFromColorHex(colorHex)
             }
         })
-        log(`Updated color successfully on ${guildID}/${roleID}`)
+        log(`directly updated color successfully on ${guildID}/${roleID}`)
     } catch (err) {
-        log(`Update for ${guildID}/${roleID} failed!`, err)
-        errLog(`Update for ${guildID}/${roleID} failed!`, err)
+        log(`direct update for ${guildID}/${roleID} failed!`, err)
+        errLog(`direct update for ${guildID}/${roleID} failed!`, err)
         throw err
     }
     return result
+}
+
+function updateColor (role, colorHex) {
+    return new Promise((resolve, reject) => {
+        const guildID = role.guild.id
+        const roleID = role.id
+        log(
+            `updating color for role ${guildID}/${roleID} to ${colorHex.toUpperCase()}`
+        )
+        role.setColor(colorHex)
+            .then(updated => {
+                log(`updated color successfully on ${guildID}/${roleID}`)
+                resolve(null)
+            })
+            .catch(err => {
+                log(`update for ${guildID}/${roleID} failed! (waiting a bit and trying again)`, err)
+                errLog(`update for ${guildID}/${roleID} failed! (waiting a bit and trying again)`, err)
+                setTimeout(() => {
+                    reject(err)
+                }, timeout)
+            })
+    })
+}
+
+Object.freeze(updateColor)
+Object.freeze(updateColorDirect)
+
+module.exports = {
+    getColorFromColorHex,
+    updateColor,
+    updateColorDirect
 }
 
 Object.freeze(module.exports)

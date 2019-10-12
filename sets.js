@@ -69,7 +69,7 @@ const schemeCache = {
 function Set (set) {
     if (schemeCache[set]) return schemeCache[set]
 
-    set = set.replace(/\-/g, '')
+    set = set.replace(/-/g, '')
 
     const originalSet = set + ''
 

@@ -28,7 +28,7 @@
 
 const Debug = require('debug')
 const Set = require('./sets.js')
-const UpdateColor = require('./updatecolor.js')
+const { updateColor } = require('./updatecolor.js')
 
 const log = Debug('role')
 const verboseLog = Debug('role-built')
@@ -65,7 +65,7 @@ function ManagedRole (role) {
         index++
         if (index >= scheme.length) index = 0
         if (index < 0) index = 0
-        await UpdateColor(role.guild.id, role.id, scheme[index])
+        await updateColor(role, scheme[index])
     }
 
     Object.defineProperties(this, {
