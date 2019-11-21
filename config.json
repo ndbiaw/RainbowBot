@@ -3,6 +3,6 @@
     "timeout": 8000,
     "maxIteration": 64,
     "useDirect": true,
-    "dieOnBoot": true,
+    "dieOnBoot": false,
     "userAgent": "rainbow-roles-bot/$"
 }
