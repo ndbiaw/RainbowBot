@@ -43,7 +43,7 @@ const bot = new Discord.Client()
 
 module.exports = bot
 
-const githubFooter = ['https://github.com/jackm-xyz/rainbow-roles'] // ["View this bot on GitHub", "https://github.com/jackm-xyz/rainbow-roles"]
+const githubFooter = ['https://github.com/luawtf/rainbow-roles'] // ["View this bot on GitHub", "https://github.com/luawtf/rainbow-roles"]
 
 bot.on('disconnect', event => {
     log('bot disconnected from discord', event)
@@ -280,7 +280,7 @@ async function itsOver (guild) {
                     "It's been 114 days since I brought Rainbow Roles online and I've just been IP-banned from editing roles.\n" +
                     'No Discord bot or Discord account on my network can ever edit role colors again, so the bot is being shutdown.\n' +
                     '\n' +
-                    'However if you would like to run your own non-banned instance feel free to use the code over at https://github.com/jackm-xyz/rainbow-roles\n' +
+                    'However if you would like to run your own non-banned instance feel free to use the code over at https://github.com/luawtf/rainbow-roles\n' +
                     '\n' +
                     'Thanks for using my bot!\n' +
                     '\n' +

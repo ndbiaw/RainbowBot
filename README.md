@@ -18,7 +18,7 @@ Tested on Linux 5.1.7-300.fc30.x86_64 (Fedora 30) with Node.js v10.15.3 and NPM 
 
 #### Terminal Commands
 ```bash
-git clone https://github.com/jackm-xyz/rainbow-roles  # Clone the repository
+git clone https://github.com/luawtf/rainbow-roles  # Clone the repository
 cd rainbow-roles  # Enter directory
 echo '{"token":"DISCORD BOT TOKEN HERE"}' > token.json  # Set your bot's login token
 npm install  # Install required packages
@@ -26,7 +26,7 @@ npm start  # Start the bot
 ```
 
 ## Authors
-Made with ❤ by Jack MacDougall ([jackm.xyz](https://jackm.xyz/))
+Made with ❤ by Jack MacDougall ([lua.wtf](https://lua.wtf/))
 
 
 ## License

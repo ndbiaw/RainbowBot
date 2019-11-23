@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jackm-xyz/rainbow-roles.git"
+    "url": "git+https://github.com/luawtf/rainbow-roles.git"
   },
   "keywords": [
     "discord",
@@ -21,12 +21,12 @@
     "color",
     "rainbow"
   ],
-  "author": "Jack MacDougall",
+  "author": "Jack MacDougall <luawhat@gmail.com> (https://lua.wtf/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jackm-xyz/rainbow-roles/issues"
+    "url": "https://github.com/luawtf/rainbow-roles/issues"
   },
-  "homepage": "https://github.com/jackm-xyz/rainbow-roles#readme",
+  "homepage": "https://github.com/luawtf/rainbow-roles#readme",
   "dependencies": {
     "axios": "^0.19.0",
     "color-convert": "^2.0.0",
