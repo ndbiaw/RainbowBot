@@ -10,7 +10,7 @@ Use "@Rainbow Roles help" to get help using the bot.
 
 
 ## Setup
-Tested on Linux 5.1.7-300.fc30.x86_64 (Fedora 30) with Node.js v10.15.3 and NPM v6.4.1.
+Confirmed working on Node.js <= 10. Node.js 12 or later recommended. Minimum Node.js 8.
 
 #### Required Software
  * Node.js
