@@ -31,13 +31,12 @@ const Discord = require('discord.js')
 const ManagedGuild = require('./guild.js')
 const { schemes, colors, colorTitle, colorToEnglish } = require('./colors.js')
 const { token } = require('./token.json')
-const { interval, dieOnBoot } = require('./config.json')
+const { interval } = require('./config.json')
 
 const log = Debug('bot')
 const statsLog = Debug('stats')
 const inviteLog = Debug('invites')
 const updateLog = Debug('bot-update')
-const deathLog = Debug('die')
 
 const bot = new Discord.Client()
 
@@ -91,7 +90,6 @@ function mainChannel (guild) {
         return chanA.position < chanB.position ? -1 : 1
     })
     const bestPossible = sorted.first()
-    // console.log(sorted, bestPossible)
 
     return bestPossible
 }
@@ -140,22 +138,6 @@ bot.on('ready', () => {
             .catch(err => statsLog(`error fetching invites for guild (${guild.id}) ${guild.name}`, err.message /* err */))
     })
     statsLog(stats)
-
-    if (dieOnBoot) {
-        setTimeout(() => {
-            deathLog('die on boot has been enabled, printing death notes and leaving guilds')
-            bot.guilds.forEach(guild => {
-                deathLog(`now leaving guild (${guild.id}) ${guild.name}`)
-                itsOver(guild)
-                    .then(() => {
-                        deathLog(`left guild (${guild.id}) ${guild.name}`)
-                    })
-                    .catch(err => {
-                        deathLog(`failed to leave guild (${guild.id}) ${guild.name}`, err)
-                    })
-            })
-        }, 8000)
-    }
 })
 
 const colorsEmbed = new Discord.RichEmbed()
@@ -261,38 +243,3 @@ bot.on('message', message => {
 })
 
 bot.login(token)
-
-// my poor child, sleep well ;w;
-async function itsOver (guild) {
-    let err
-/*     try {
-        await mainChannel(guild).send({
-            embed: new Discord.RichEmbed()
-                .setTitle('Rainbow Roles is DEAD!')
-                .setDescription(
-                    'Hello everyone! Jack here. (creator of da bot)\n' +
-                    '\n' +
-                    'So it finally happened.\n' +
-                    '\n' +
-                    'Originally while designing this bot I ignored the warning from @discordapp about how I would get banned for making Rainbow Roles:\n' +
-                    'https://twitter.com/discordapp/status/1055182857709256704\n' +
-                    '\n' +
-                    "It's been 114 days since I brought Rainbow Roles online and I've just been IP-banned from editing roles.\n" +
-                    'No Discord bot or Discord account on my network can ever edit role colors again, so the bot is being shutdown.\n' +
-                    '\n' +
-                    'However if you would like to run your own non-banned instance feel free to use the code over at https://github.com/luawtf/rainbow-roles\n' +
-                    '\n' +
-                    'Thanks for using my bot!\n' +
-                    '\n' +
-                    'Self destructing in\n' +
-                    '3...\n' +
-                    '2...\n' +
-                    '1...'
-                )
-                .setFooter(...githubFooter)
-        })
-    } catch (error) { err = error } */
-    await new Promise(r=>setTimeout(r,5000))
-    await guild.leave()
-    if (err) throw err
-}
