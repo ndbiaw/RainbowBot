@@ -29,10 +29,13 @@
 const Debug = require('debug')
 const Set = require('./sets.js')
 const { updateColor, updateColorDirect } = require('./updatecolor.js')
-const { useDirect } = require('./config.json')
+const { useDirect, rolePrefix } = require('./config.json')
 
 const log = Debug('role')
 const verboseLog = Debug('role-built')
+
+const roleRegexp = new RegExp(`^${rolePrefix}-[a-zA-Z-]+$`, 'i')
+const prefixRegexp = new RegExp(`^${rolePrefix}-`, 'i')
 
 function ManagedRole (role) {
     log(`trying to manage role ${role.id} (${role.name})`)
@@ -41,12 +44,12 @@ function ManagedRole (role) {
     let lastRoleName = ''
 
     function buildScheme () {
-        if (!/^rainbow-[a-zA-Z-]+$/i.test(role.name)) {
-            log(`role ${role.id} (${role.name}) does not match /^rainbow-[a-zA-Z-]+$/i`)
+        if (!roleRegexp.test(role.name)) {
+            log(`role ${role.id} (${role.name}) does not match ${roleRegexp.toString()}`)
             throw new Error('Role not manageable')
         }
         verboseLog(`role ${role.id} (${role.name}) on guild ${role.guild.id} ${role.guild.name} is being compiled`)
-        scheme = Set(role.name.replace(/^rainbow-/i, ''))
+        scheme = Set(role.name.replace(prefixRegexp, ''))
         if (!scheme) {
             verboseLog(`role ${role.id} (${role.name}) did not compile`)
             log(`role ${role.id} (${role.name}) is not a valid set`)

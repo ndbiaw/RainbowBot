@@ -3,5 +3,6 @@
     "timeout": 8000,
     "maxIteration": 64,
     "useDirect": true,
+    "rolePrefix": "xd",
     "userAgent": "rainbow-roles-bot/$"
 }

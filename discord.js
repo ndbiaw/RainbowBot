@@ -44,7 +44,7 @@ const token = (() => {
 const Discord = require('discord.js')
 const ManagedGuild = require('./guild.js')
 const { schemes, colors, colorTitle, colorToEnglish } = require('./colors.js')
-const { interval } = require('./config.json')
+const { interval, rolePrefix } = require('./config.json')
 
 const statsLog = Debug('stats')
 const inviteLog = Debug('invites')
@@ -209,7 +209,7 @@ bot.on('message', message => {
             await message.channel.send({
                 embed: new Discord.RichEmbed()
                     .setTitle('Usage Guide')
-                    .setDescription('Creating a rainbow role is simple.\nAdd a new role **below the bot\'s highest role** in the roles list.\nThen, name it `rainbow-red` or another color combo like `rainbow-bluegreen`.\nDashes are allowed too so try `rainbow-red-purple-bluegreen-white`.\nThe bot will automatically start cycling colors for that role.\nYou can also use some special sets like `rainbow-pride` or `rainbow-orangetored`.')
+                    .setDescription(`Creating a rainbow role is simple.\nAdd a new role **below the bot\'s highest role** in the roles list.\nThen, name it \`${rolePrefix}-red\` or another color combo like \`${rolePrefix}-bluegreen\`.\nDashes are allowed too so try \`${rolePrefix}-red-purple-bluegreen-white\`.\nThe bot will automatically start cycling colors for that role.\nYou can also use some special sets like \`${rolePrefix}-pride\` or \`${rolePrefix}-orangetored\`.`)
                     .setFooter(...githubFooter)
             })
             return
