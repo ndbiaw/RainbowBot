@@ -27,13 +27,25 @@
  */
 
 const Debug = require('debug')
+const log = Debug('bot')
+
+const token = (() => {
+    try {
+        const tokenObj = require('./token.json')
+        const tokenStr = tokenObj.token
+        if (!tokenStr) throw new Error('Invalid token string contents')
+        return tokenStr
+    } catch (err) {
+        log('!! INVALID TOKEN !! it seems that the token.json file is invalid or nonexistant, please see the readme for more info')
+        throw err
+    }
+})()
+
 const Discord = require('discord.js')
 const ManagedGuild = require('./guild.js')
 const { schemes, colors, colorTitle, colorToEnglish } = require('./colors.js')
-const { token } = require('./token.json')
 const { interval } = require('./config.json')
 
-const log = Debug('bot')
 const statsLog = Debug('stats')
 const inviteLog = Debug('invites')
 const updateLog = Debug('bot-update')
@@ -165,7 +177,6 @@ bot.on('message', message => {
     if (!message.isMentioned(bot.user)) return
     if (!mentionRegex.test(message.content)) return
 
-    // TODO: interpret commands
     ;(async () => {
         /*
         help - display help for commands
