@@ -36,7 +36,7 @@ const token = (() => {
         if (!tokenStr) throw new Error('Invalid token string contents')
         return tokenStr
     } catch (err) {
-        log('!! INVALID TOKEN !! it seems that the token.json file is invalid or nonexistant, please see the readme for more info')
+        log('!! INVALID TOKEN !! it seems that the token.json file is invalid or nonexistent, please see the readme for more info')
         throw err
     }
 })()
@@ -70,16 +70,6 @@ bot.on('warn', warning => {
     log('bot thrown warning', warning)
 })
 
-bot.on('guildCreate', guild => {
-    log(`bot joined guild ${guild.id} (${guild.name})`)
-    mainChannel(guild).send({
-        embed: new Discord.RichEmbed()
-            .setTitle('Rainbow Roles')
-            .setDescription('Thanks for adding Rainbow Roles to your Discord server!\nUse "@Rainbow Roles help" to get help using rainbow roles.')
-            .setFooter(...githubFooter)
-    })
-})
-
 function hasSendPermission (channel) {
     return channel.type === 'text' && channel.memberPermissions(channel.guild.me).has('SEND_MESSAGES')
 }
@@ -104,6 +94,10 @@ function mainChannel (guild) {
     const bestPossible = sorted.first()
 
     return bestPossible
+}
+
+function getBotAt() {
+    return bot.user ? bot.user.tag : 'Rainbow Roles'
 }
 
 let mentionRegex
@@ -152,6 +146,16 @@ bot.on('ready', () => {
     statsLog(stats)
 })
 
+bot.on('guildCreate', guild => {
+    log(`bot joined guild ${guild.id} (${guild.name})`)
+    mainChannel(guild).send({
+        embed: new Discord.RichEmbed()
+            .setTitle('Rainbow Roles')
+            .setDescription(`Thanks for adding Rainbow Roles to your Discord server!\nUse "@${getBotAt()} help" to get help using rainbow roles.`)
+            .setFooter(...githubFooter)
+    })
+})
+
 const colorsEmbed = new Discord.RichEmbed()
 colorsEmbed.setTitle('Color List')
 colorsEmbed.setDescription('Here are all the available colors and their color codes.')
@@ -190,7 +194,7 @@ bot.on('message', message => {
             await message.channel.send({
                 embed: new Discord.RichEmbed()
                     .setTitle('Rainbow Roles Help')
-                    .setDescription('Using the Rainbow Roles Discord bot is very easy.\nRun commands by mentioning the bot with the command you want to run. (e.x. "@Rainbow Roles help")')
+                    .setDescription(`Using the Rainbow Roles Discord bot is very easy.\nRun commands by mentioning the bot with the command you want to run. (e.x. "@${getBotAt()} help")`)
                     .addField('help', 'Show this help page and all available commands.')
                     .addField('guide', 'Print out the Rainbow Roles setup/usage guide.')
                     .addField('colors', 'List possible color names for use in defining new roles.')

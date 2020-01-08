@@ -66,9 +66,6 @@ async function updateColorDirect (guildID, roleID, colorHex) {
                 'Content-Type': 'application/json'
             },
             data: {
-                // i would have kept this as a meme but god damn eval in production
-                // WITH USER INPUT no less
-                // color: eval('0x' + ((colorHex.match(/#[0-9ABCDEF]{6}/i) || [])[0] || '#FFFFFF').substring(1)) // eval is not good, use a better system in the future
                 color: getColorFromColorHex(colorHex)
             }
         })
