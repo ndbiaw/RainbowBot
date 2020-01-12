@@ -1,5 +1,5 @@
 {
-    "interval": 5,
+    "interval": 1,
     "timeout": 8000,
     "maxIteration": 64,
     "useDirect": true,
