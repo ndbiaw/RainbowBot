@@ -31,7 +31,7 @@
     "axios": "^0.21.2",
     "color-convert": "^2.0.0",
     "cross-env": "^6.0.3",
-    "debug": "^4.1.1",
+    "debug": "^4.3.1",
     "discord.js": "^11.5.1",
     "json5": "^2.2.2",
     "standardx": "^7.0.0",
